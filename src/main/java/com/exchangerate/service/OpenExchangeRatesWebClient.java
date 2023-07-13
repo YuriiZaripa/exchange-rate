@@ -25,7 +25,7 @@ public class OpenExchangeRatesWebClient {
         return client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(LATEST_DATA_IN_JSON_FORMAT)
-                        .queryParam(APP_ID,API_KEY)
+                        .queryParam(APP_ID, API_KEY)
                         .build())
                 .retrieve()
                 .bodyToMono(RateResponse.class);

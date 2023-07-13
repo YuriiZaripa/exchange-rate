@@ -1,6 +1,6 @@
 package com.exchangerate.service;
 
-import com.exchangerate.exception.NullBodySoursResponseException;
+import com.exchangerate.exception.OpenExchangeRatesNullBodySoursResponseException;
 import com.exchangerate.model.ExchangeRate;
 import com.exchangerate.repository.ExchangeRateRepository;
 import com.exchangerate.exception.InvalidCurrencyCodeException;
@@ -21,6 +21,7 @@ public class ExchangeRateService {
     private final ExchangeRateRepository exchangeRateRepository;
 
     private final static String USD = "USD";
+    private final static int BIG_DECIMAL_PRECISION = 8;
 
     public Flux<ExchangeRate> findAll() {
         return exchangeRateRepository.findAll();
@@ -28,11 +29,11 @@ public class ExchangeRateService {
 
     public Flux<ExchangeRate> findAllByCurrencyCode(String currencyCode) {
         if (currencyCode.equals(USD)) {
-            return findAll();
+            return exchangeRateRepository.findAll();
         }
 
         return exchangeRateRepository.findByCurrencyCode(currencyCode)
-                .switchIfEmpty(Mono.error(InvalidCurrencyCodeException::new))
+                .switchIfEmpty(Mono.error(() -> new InvalidCurrencyCodeException(currencyCode)))
                 .flatMapMany(fulcrumExchangeRate ->
                         exchangeRateRepository.findAll()
                                 .map(exchangeRate ->
@@ -46,23 +47,24 @@ public class ExchangeRateService {
     public Mono<BigDecimal> exchangeRate(String from, String to) {
         if (from.equals(USD))
             return exchangeRateRepository.findByCurrencyCode(to)
-                    .switchIfEmpty(Mono.error(InvalidCurrencyCodeException::new))
+                    .switchIfEmpty(Mono.error(() -> new InvalidCurrencyCodeException(to)))
                     .map(exchangeRate -> exchangeRate.getCost());
 
         return exchangeRateRepository.findByCurrencyCode(from)
-                .switchIfEmpty(Mono.error(InvalidCurrencyCodeException::new))
+                .switchIfEmpty(Mono.error(() -> new InvalidCurrencyCodeException(from)))
                 .flatMap(exchangeRateFrom ->
                         exchangeRateRepository.findByCurrencyCode(to)
-                                .switchIfEmpty(Mono.error(InvalidCurrencyCodeException::new))
+                                .switchIfEmpty(Mono.error(() -> new InvalidCurrencyCodeException(to)))
                                 .map(exchangeRateTo ->
                                         calculateExchangeRate(exchangeRateTo.getCost(), exchangeRateFrom.getCost()))
                 );
     }
 
     @Scheduled(fixedDelayString = "${rate-source.delay}")
-    public void updateExchangeRates() {client.getRates()
+    public void updateExchangeRates() {
+        client.getRates()
                 .flatMapIterable(rateResponse -> rateResponse.getRates().entrySet())
-                .switchIfEmpty(Mono.error(NullBodySoursResponseException::new))
+                .switchIfEmpty(Mono.error(OpenExchangeRatesNullBodySoursResponseException::new))
                 .map(entry -> ExchangeRate.builder()
                         .currencyCode(entry.getKey())
                         .cost(entry.getValue())
@@ -77,7 +79,7 @@ public class ExchangeRateService {
                 }).subscribe();
     }
 
-    private BigDecimal calculateExchangeRate(BigDecimal currantRate, BigDecimal fulcrum) {
-        return currantRate.divide(fulcrum, 8, RoundingMode.HALF_UP);
+    private BigDecimal calculateExchangeRate(BigDecimal currentRate, BigDecimal fulcrum) {
+        return currentRate.divide(fulcrum, BIG_DECIMAL_PRECISION, RoundingMode.HALF_UP);
     }
 }

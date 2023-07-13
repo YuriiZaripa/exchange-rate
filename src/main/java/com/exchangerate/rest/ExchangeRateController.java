@@ -17,17 +17,17 @@ public class ExchangeRateController {
     private final ExchangeRateService exchangeRateService;
 
     @GetMapping
-    public Flux<ExchangeRate> getAll() {
+    public Flux<ExchangeRate> findAll() {
         return exchangeRateService.findAll();
     }
 
     @GetMapping("/{currencyCode}")
-    public Flux<ExchangeRate> getExchangeRateByCurrencyCode(@PathVariable String currencyCode) {
+    public Flux<ExchangeRate> findAllByCurrencyCode(@PathVariable String currencyCode) {
         return exchangeRateService.findAllByCurrencyCode(currencyCode);
     }
 
-    @GetMapping("/change")
-    public Mono<BigDecimal> exchangeRateFromTo(@RequestParam(name = "from") String from, @RequestParam(name = "to") String to) {
+    @GetMapping("/exchange")
+    public Mono<BigDecimal> findPairExchangeRate(@RequestParam(name = "from") String from, @RequestParam(name = "to") String to) {
         return exchangeRateService.exchangeRate(from, to);
     }
 }

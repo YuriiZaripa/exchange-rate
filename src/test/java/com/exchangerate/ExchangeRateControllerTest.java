@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -39,6 +38,12 @@ public class ExchangeRateControllerTest {
     @Autowired
     private WebTestClient webClient;
 
+    private static final int BIG_DECIMAL_PRECISION = 8;
+    private static final String UAH = "UAH";
+    private static final String EUR = "EUR";
+    private static final String USD = "USD";
+    private static final String APPLICATION_JSON = "application/json";
+
     @Test
     public void testFindAllExchangeRates_ShouldBySuccess() {
         List<ExchangeRate> rates = getExchangeRateMockData();
@@ -47,7 +52,7 @@ public class ExchangeRateControllerTest {
 
         webClient.get()
                 .uri("/api/v1/exchange-rates")
-                .header(HttpHeaders.ACCEPT, "application/json")
+                .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ExchangeRate.class)
@@ -81,27 +86,27 @@ public class ExchangeRateControllerTest {
         List<ExchangeRate> expectedResponseRates = List.of(
                 ExchangeRate.builder()
                         .id(1)
-                        .currencyCode("USD")
+                        .currencyCode(USD)
                         .cost(BigDecimal.valueOf(0.02713704))
                         .build(),
                 ExchangeRate.builder()
                         .id(2)
-                        .currencyCode("EUR")
+                        .currencyCode(EUR)
                         .cost(BigDecimal.valueOf(0.02306649))
                         .build(),
                 ExchangeRate.builder()
                         .id(3)
-                        .currencyCode("UAH")
+                        .currencyCode(UAH)
                         .cost(BigDecimal.valueOf(1.00000000))
                         .build()
         );
 
         Mockito.when(repository.findAll()).thenReturn(Flux.fromIterable(mockRates));
-        Mockito.when(repository.findByCurrencyCode("UAH")).thenReturn(Mono.just(uahRate));
+        Mockito.when(repository.findByCurrencyCode(UAH)).thenReturn(Mono.just(uahRate));
 
         webClient.get()
-                .uri("/api/v1/exchange-rates/{currencyCode}", "UAH")
-                .header(HttpHeaders.ACCEPT, "application/json")
+                .uri("/api/v1/exchange-rates/{currencyCode}", UAH)
+                .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ExchangeRate.class)
@@ -127,18 +132,18 @@ public class ExchangeRateControllerTest {
 
     @Test
     public void testExchangeRateFromTo_ShouldBySuccess() {
-        ExchangeRate eurRate = getUEURExchangeRateMockData();
+        ExchangeRate eurRate = getEURExchangeRateMockData();
         String from = eurRate.getCurrencyCode();
         ExchangeRate uahRate = getUAHExchangeRateMockData();
         String to = uahRate.getCurrencyCode();
-        BigDecimal exchangeRate = uahRate.getCost().divide(eurRate.getCost(), 8, RoundingMode.HALF_UP);
+        BigDecimal exchangeRate = uahRate.getCost().divide(eurRate.getCost(), BIG_DECIMAL_PRECISION, RoundingMode.HALF_UP);
 
-        Mockito.when(repository.findByCurrencyCode("UAH")).thenReturn(Mono.just(uahRate));
-        Mockito.when(repository.findByCurrencyCode("EUR")).thenReturn(Mono.just(eurRate));
+        Mockito.when(repository.findByCurrencyCode(UAH)).thenReturn(Mono.just(uahRate));
+        Mockito.when(repository.findByCurrencyCode(EUR)).thenReturn(Mono.just(eurRate));
 
         webClient.get()
-                .uri("/api/v1/exchange-rates/change?from={from}&to={to}", from, to)
-                .header(HttpHeaders.ACCEPT, "application/json")
+                .uri("/api/v1/exchange-rates/exchange?from={from}&to={to}", from, to)
+                .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(BigDecimal.class)
@@ -148,7 +153,7 @@ public class ExchangeRateControllerTest {
     private List<ExchangeRate> getExchangeRateMockData() {
         return List.of(
                 getUSDExchangeRateMockData(),
-                getUEURExchangeRateMockData(),
+                getEURExchangeRateMockData(),
                 getUAHExchangeRateMockData()
         );
     }
@@ -156,15 +161,15 @@ public class ExchangeRateControllerTest {
     private ExchangeRate getUSDExchangeRateMockData() {
         return ExchangeRate.builder()
                 .id(1)
-                .currencyCode("USD")
+                .currencyCode(USD)
                 .cost(BigDecimal.valueOf(1.00000000))
                 .build();
     }
 
-    private ExchangeRate getUEURExchangeRateMockData() {
+    private ExchangeRate getEURExchangeRateMockData() {
         return ExchangeRate.builder()
                 .id(2)
-                .currencyCode("EUR")
+                .currencyCode(EUR)
                 .cost(BigDecimal.valueOf(0.8500000))
                 .build();
     }
@@ -172,7 +177,7 @@ public class ExchangeRateControllerTest {
     private ExchangeRate getUAHExchangeRateMockData() {
         return ExchangeRate.builder()
                 .id(3)
-                .currencyCode("UAH")
+                .currencyCode(UAH)
                 .cost(BigDecimal.valueOf(36.8500000))
                 .build();
     }

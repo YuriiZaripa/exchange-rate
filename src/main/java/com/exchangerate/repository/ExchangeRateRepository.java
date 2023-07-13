@@ -5,5 +5,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 
 public interface ExchangeRateRepository extends ReactiveCrudRepository<ExchangeRate, String> {
+
     Mono<ExchangeRate> findByCurrencyCode(String currencyCode);
 }
