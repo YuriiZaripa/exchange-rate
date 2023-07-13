@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/currency_exchange
+    username: ${USER_NAME}
+    password: ${PASSWORD}
+
+rate-source:
+  url: https://openexchangerates.org/api
+  api-key: ${API_KEY}
+  delay: 30000 #n
