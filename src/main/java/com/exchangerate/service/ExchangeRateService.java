@@ -1,6 +1,6 @@
 package com.exchangerate.service;
 
-import com.exchangerate.exception.OpenExchangeRatesNullBodySoursResponseException;
+import com.exchangerate.exception.OpenExchangeRatesNullBodySourceResponseException;
 import com.exchangerate.model.ExchangeRate;
 import com.exchangerate.repository.ExchangeRateRepository;
 import com.exchangerate.exception.InvalidCurrencyCodeException;
@@ -64,7 +64,7 @@ public class ExchangeRateService {
     public void updateExchangeRates() {
         client.getRates()
                 .flatMapIterable(rateResponse -> rateResponse.getRates().entrySet())
-                .switchIfEmpty(Mono.error(OpenExchangeRatesNullBodySoursResponseException::new))
+                .switchIfEmpty(Mono.error(OpenExchangeRatesNullBodySourceResponseException::new))
                 .map(entry -> ExchangeRate.builder()
                         .currencyCode(entry.getKey())
                         .cost(entry.getValue())
