@@ -4,6 +4,7 @@ Java: JDK 17
 PostgreSQL 15+
 
 Useful links:
+
 JDK 17 - https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html
 
 PostgreSQL - https://www.postgresql.org/download/
