@@ -20,16 +20,22 @@ psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (id SE
 Make sure to replace "your_username" with your actual PostgreSQL username.
 
 Don't forget to specify your username and password in the application.yml file:
+
 spring:
+
 r2dbc:
+
 username: ${USER_NAME}
+
 password: ${PASSWORD}
 
 Next, you need to obtain an API key from the resource https://openexchangerates.org/.
 To do this, you need to register by following this link - https://openexchangerates.org/signup/free. The link leads to the free version, but you can choose any convenient pricing plan.
 
 Insert the API key into the application.yml file:
+
 rate-source:
+
 API-key: ${API_KEY}
 
 You can also set the data update frequency in the database from the specified resource.
