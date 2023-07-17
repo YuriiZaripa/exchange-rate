@@ -11,13 +11,48 @@ PostgreSQL - https://www.postgresql.org/download/
 
 When installing PostgreSQL, the default user is not recommended for use in projects. However, for application testing purposes, you can use the default user "postgres," which usually has the password set as "postgres" for convenience.
 
-Before the first project launch, you need to generate the database. You can use the following script:
+Before the first project launch, you need to generate the database. You can use the following scripts:
+
+For Linux:
+
+sudo -i -u your_username
 
 psql -U your_username -c "CREATE DATABASE currency_exchange;"
 
-psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (id SERIAL PRIMARY KEY, currency_code VARCHAR(5) NOT NULL, cost NUMERIC(19,8) NOT NULL);"
+psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
+  id SERIAL PRIMARY KEY,
+  currency_code VARCHAR(255) NOT NULL,
+  cost NUMERIC(19, 8) NOT NULL
+);"
+--------------------------------------------------------------------------------------------------
 
-Make sure to replace "your_username" with your actual PostgreSQL username.
+For Windows:
+
+pg_ctl start -D "C:\Program Files\PostgreSQL\{version}\data"
+
+psql -U your_username -c "CREATE DATABASE currency_exchange;"
+
+psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
+  id SERIAL PRIMARY KEY,
+  currency_code VARCHAR(255) NOT NULL,
+  cost NUMERIC(19, 8) NOT NULL
+);"
+--------------------------------------------------------------------------------------------------
+
+For macOS: 
+
+pg_ctl -D /usr/local/var/postgres start
+
+psql -U your_username -c "CREATE DATABASE currency_exchange;"
+
+psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
+  id SERIAL PRIMARY KEY,
+  currency_code VARCHAR(255) NOT NULL,
+  cost NUMERIC(19, 8) NOT NULL
+);"
+--------------------------------------------------------------------------------------------------
+
+Make sure to replace "your_username" with your actual PostgreSQL username and valid path (the example for macOS and Windows uses the default path).
 
 Don't forget to specify your username and password in the application.yml file:
 
