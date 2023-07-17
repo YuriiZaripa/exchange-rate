@@ -52,13 +52,13 @@ Make sure to replace "your_username" with your actual PostgreSQL username and va
 
 ### Don't forget to specify your username and password in the application.yml file:
 
-spring:
+    spring:
 
-  r2dbc:
+    r2dbc:
 
-    username: ${USER_NAME}
+      username: ${USER_NAME}
 
-    password: ${PASSWORD}
+      password: ${PASSWORD}
 
 ***********************************************************************************************************************
 
@@ -67,17 +67,17 @@ To do this, you need to register by following this link - https://openexchangera
 
 Insert the API key into the application.yml file:
 
-rate-source:
+    rate-source:
 
-  API-key: ${API_KEY}
+      API-key: ${API_KEY}
 ***********************************************************************************************************************
 
 You can also set the data update frequency in the database from the specified resource.
 To do this, set the value in milliseconds for the "delay" property in application.yml:
 
-rate-source:
+    rate-source:
 
-  delay: ${MILLISECONDS}
+      delay: ${MILLISECONDS}
 
 After launching the project, the database will be automatically populated and updated every "delay" milliseconds.
 
