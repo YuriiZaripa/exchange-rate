@@ -91,8 +91,9 @@ http://localhost:8080/api/v1/exchange-rates/AZN - all available exchange rates f
 http://localhost:8080/api/v1/exchange-rates/exchange?from=UAH&to=USD - how many dollars can be bought for 1 UAH, i.e., the exchange rate from one specific currency to another specific currency.
 ***********************************************************************************************************************
 
-# exchange-rate
-Тестове завдання:
+
+
+## Тестове завдання:
 
 1.Написати сервіс, який має ходити на зовнішне API,отримувати курс валют та зберігати в базі, з n періодичністю оновлювати данні курси.
 
