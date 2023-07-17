@@ -1,13 +1,12 @@
-To launch the project, you will need:
-Spring Boot 3+
-Java: JDK 17
-PostgreSQL 15+
+## To launch the project, you will need:
+*Spring Boot 3+
+*Java: JDK 17
+*PostgreSQL 15+
 
 Useful links:
 
-JDK 17 - https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html
-
-PostgreSQL - https://www.postgresql.org/download/
+*[JDK 17](#https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html)
+*P[PostgreSQL](#https://www.postgresql.org/download/)
 
 When installing PostgreSQL, the default user is not recommended for use in projects. However, for application testing purposes, you can use the default user "postgres," which usually has the password set as "postgres" for convenience.
 
