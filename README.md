@@ -4,81 +4,85 @@
 * PostgreSQL 15+
 
 ## Useful links:
-* [JDK 17](#https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html)
-* [PostgreSQL](#https://www.postgresql.org/download/)
+* JDK 17 - https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html
+* PostgreSQL - https://www.postgresql.org/download/
 
 When installing PostgreSQL, the default user is not recommended for use in projects. However, for application testing purposes, you can use the default user "postgres," which usually has the password set as "postgres" for convenience.
 
-Before the first project launch, you need to generate the database. You can use the following scripts:
+## Before the first project launch, you need to generate the database. You can use the following scripts:
 
-For Linux:
+### For Linux:
 
-sudo -i -u your_username
+* sudo -i -u your_username
 
-psql -U your_username -c "CREATE DATABASE currency_exchange;"
+* psql -U your_username -c "CREATE DATABASE currency_exchange;"
 
-psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
+ * psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
   id SERIAL PRIMARY KEY,
   currency_code VARCHAR(255) NOT NULL,
   cost NUMERIC(19, 8) NOT NULL
 );"
-***********************************************************************************************************************
 
-For Windows:
+### For Windows:
 
-pg_ctl start -D "C:\Program Files\PostgreSQL\{version}\data"
+* pg_ctl start -D "C:\Program Files\PostgreSQL\{version}\data"
 
-psql -U your_username -c "CREATE DATABASE currency_exchange;"
+* psql -U your_username -c "CREATE DATABASE currency_exchange;"
 
-psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
+ * psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
   id SERIAL PRIMARY KEY,
   currency_code VARCHAR(255) NOT NULL,
   cost NUMERIC(19, 8) NOT NULL
 );"
-***********************************************************************************************************************
 
-For macOS: 
+### For macOS: 
 
-pg_ctl -D /usr/local/var/postgres start
+* pg_ctl -D /usr/local/var/postgres start
 
-psql -U your_username -c "CREATE DATABASE currency_exchange;"
+* psql -U your_username -c "CREATE DATABASE currency_exchange;"
 
-psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
+* psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
   id SERIAL PRIMARY KEY,
   currency_code VARCHAR(255) NOT NULL,
   cost NUMERIC(19, 8) NOT NULL
 );"
-***********************************************************************************************************************
+
 Make sure to replace "your_username" with your actual PostgreSQL username and valid path (the example for macOS and Windows uses the default path).
 
-Don't forget to specify your username and password in the application.yml file:
+
+### Don't forget to specify your username and password in the application.yml file:
 
 spring:
 
-r2dbc:
+  r2dbc:
 
-username: ${USER_NAME}
+    username: ${USER_NAME}
 
-password: ${PASSWORD}
+    password: ${PASSWORD}
 
-Next, you need to obtain an API key from the resource https://openexchangerates.org/.
+***********************************************************************************************************************
+
+## Next, you need to obtain an API key from the resource https://openexchangerates.org/.
 To do this, you need to register by following this link - https://openexchangerates.org/signup/free. The link leads to the free version, but you can choose any convenient pricing plan.
 
 Insert the API key into the application.yml file:
 
 rate-source:
 
-API-key: ${API_KEY}
+  API-key: ${API_KEY}
+***********************************************************************************************************************
 
 You can also set the data update frequency in the database from the specified resource.
 To do this, set the value in milliseconds for the "delay" property in application.yml:
+
 rate-source:
-delay: ${MILLISECONDS}
+
+  delay: ${MILLISECONDS}
 
 After launching the project, the database will be automatically populated and updated every "delay" milliseconds.
 
 ***********************************************************************************************************************
-Endpoints with examples:
+## Endpoints with examples:
 
 http://localhost:8080/api/v1/exchange-rates - all available currencies in international banking currency "USD"
 
