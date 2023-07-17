@@ -24,7 +24,7 @@ psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
   currency_code VARCHAR(255) NOT NULL,
   cost NUMERIC(19, 8) NOT NULL
 );"
---------------------------------------------------------------------------------------------------
+***********************************************************************************************************************
 
 For Windows:
 
@@ -37,7 +37,7 @@ psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
   currency_code VARCHAR(255) NOT NULL,
   cost NUMERIC(19, 8) NOT NULL
 );"
---------------------------------------------------------------------------------------------------
+***********************************************************************************************************************
 
 For macOS: 
 
@@ -50,8 +50,7 @@ psql -U your_username -d currency_exchange -c "CREATE TABLE exchange_rate (
   currency_code VARCHAR(255) NOT NULL,
   cost NUMERIC(19, 8) NOT NULL
 );"
---------------------------------------------------------------------------------------------------
-
+***********************************************************************************************************************
 Make sure to replace "your_username" with your actual PostgreSQL username and valid path (the example for macOS and Windows uses the default path).
 
 Don't forget to specify your username and password in the application.yml file:
