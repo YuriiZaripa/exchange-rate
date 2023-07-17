@@ -80,6 +80,15 @@ delay: ${MILLISECONDS}
 
 After launching the project, the database will be automatically populated and updated every "delay" milliseconds.
 
+***********************************************************************************************************************
+Endpoints with examples:
+
+http://localhost:8080/api/v1/exchange-rates - all available currencies in international banking currency "USD"
+
+http://localhost:8080/api/v1/exchange-rates/AZN - all available exchange rates for this currency relative to it
+
+http://localhost:8080/api/v1/exchange-rates/exchange?from=UAH&to=USD - how many dollars can be bought for 1 UAH, i.e., the exchange rate from one specific currency to another specific currency.
+***********************************************************************************************************************
 
 # exchange-rate
 Тестове завдання:
